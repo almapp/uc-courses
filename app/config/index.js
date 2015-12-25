@@ -4,6 +4,7 @@ const settings = {
   'PRODUCTION': 'app/config/env/production.json',
   'DEVELOPMENT': 'app/config/env/development.json',
   'TEST': 'app/config/env/test.json',
+  'CI': 'app/config/env/ci.json', // To use with Travis-CI
 }
 
 const env = process.env.NODE_ENV || 'DEVELOPMENT';
