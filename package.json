@@ -1,0 +1,46 @@
+{
+  "name": "uc-courses",
+  "version": "1.0.0",
+  "description": "UC Courses API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "scrap": "node app/tasks/scrap",
+    "develop": "node_modules/nodemon/bin/nodemon.js index.js",
+    "test": "mocha --harmony_rest_parameters"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/almapp/uc-courses.git"
+  },
+  "keywords": [
+    "uc",
+    "puc",
+    "courses"
+  ],
+  "author": "Patricio López <patricio@lopezjuri.com> (https://lopezjuri.com)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/almapp/uc-courses/issues"
+  },
+  "homepage": "https://github.com/almapp/uc-courses#readme",
+  "dependencies": {
+    "bluebird": "^3.1.1",
+    "body-parser": "^1.14.2",
+    "buscacursos-uc": "^2.0.0",
+    "buscacursos-uc-scraper": "git://github.com/mrpatiwi/buscacursos-uc-scraper#2.0.0",
+    "express": "^4.13.3",
+    "http-status-codes": "^1.0.5",
+    "mongoose": "^4.3.3",
+    "morgan": "^1.6.1",
+    "nconf": "^0.8.2",
+    "require-dir": "^0.3.0",
+    "throw.js": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4",
+    "nodemon": "^1.8.1",
+    "supertest": "^1.1.0"
+  }
+}
