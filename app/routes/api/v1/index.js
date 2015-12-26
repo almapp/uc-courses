@@ -29,6 +29,11 @@ router.route('/')
               type: 'string',
               default: 'all',
             },
+            section: {
+              description: 'Find course by section',
+              type: 'number',
+              default: 'all',
+            },
             NRC: {
               description: 'Find course by NRC',
               type: 'number',
@@ -96,7 +101,7 @@ router.route('/')
           ],
         },
         {
-          description: 'Get section',
+          description: 'Get single section',
           resource: 'Section',
           method: 'GET',
           url: `${req.protocol}://${req.headers.host}/api/v1/courses/_/_/id/:_id`,
@@ -105,7 +110,7 @@ router.route('/')
           ],
         },
         {
-          description: 'Get section',
+          description: 'Get single section',
           resource: 'Section',
           method: 'GET',
           url: `${req.protocol}://${req.headers.host}/api/v1/courses/_/_/NRC/:nrc`,
@@ -114,7 +119,7 @@ router.route('/')
           ],
         },
         {
-          description: 'Get section',
+          description: 'Get single section',
           resource: 'Section',
           method: 'GET',
           url: `${req.protocol}://${req.headers.host}/api/v1/courses/_/_/:initials/sections/:section`,
