@@ -19,4 +19,7 @@ module.exports = nconf.env().argv().file(file).defaults({
   'mongo': {
     'uri': 'mongodb://localhost:27017/uccourses',
   },
+  'scrap': {
+    'secret': process.env.SECRET_ENDPOINT,
+  }
 });

@@ -6,6 +6,7 @@ web:
     - mongo
   environment:
     - NODE_ENV
+    - SECRET_ENDPOINT
 
 mongo:
   image: mongo
