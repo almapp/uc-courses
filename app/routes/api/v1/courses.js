@@ -28,6 +28,7 @@ router.route('/search')
     const reg = (exp) => new RegExp(exp, 'i');
     const regs = (exps) => exps.map(reg);
 
+    // Prepare search query
     const search = [];
     if (query.name) search.push({ name: reg(query.name) })
     if (query.initials) search.push({ initials: reg(query.initials) })
@@ -48,6 +49,11 @@ router.route('/search')
         obj[`schedule.${type}.location.place`] = { $in: regs(query.places) };
         return obj;
       })});
+    }
+
+    // Do not allow empty search query
+    if (search.length === 0) {
+      return next(new throwjs.unprocessableEntity('empty search queries are not allowed'));
     }
 
     Course.find({ $and: search }).limit(50).sort('initials').lean()
