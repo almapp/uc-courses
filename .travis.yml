@@ -5,7 +5,7 @@ services:
 
 env:
   global:
-    - NODE_ENV=test
+    - NODE_ENV=CI
 
 script:
   - docker-compose build
