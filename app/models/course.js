@@ -192,6 +192,8 @@ const exclude = [
   'schedule',
   'vacancy',
   'teachers',
+  'updatedAt',
+  'createdAt',
 ].map(e => `-${e}`).join(' ');
 
 CourseSchema.statics.findInitial = function(params) {
