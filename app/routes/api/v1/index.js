@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const throwjs = require('throw.js');
 
 const Course = mongoose.model('Course');
 
@@ -135,18 +136,29 @@ router.use((req, res, next) => {
   next();
 });
 
-router.param('year', (req, res, next, id) => {
-  // const date = new Date();
-  req.year = (req.params.year && req.params.year !== '_') ? req.params.year : 2016; // date.getFullYear();
+router.param('year', (req, res, next) => {
+  const year = req.params.year;
+  if (year === '_') req.year = 2016;
+  else if (Number(year)) req.year = year;
+  else return next(new throwjs.notAcceptable(`invalid year, got '${year}'`));
   next();
 });
 
-router.param('period', (req, res, next, id) => {
-  // const date = new Date();
-  req.period = (req.params.period && req.params.period !== '_') ? req.params.period : 1;
+router.param('period', (req, res, next) => {
+  const period = req.params.period;
+  if (period === '_') req.period = 1;
+  else if (Number(period)) req.period = period;
+  else return next(new throwjs.notAcceptable(`invalid period, got '${period}'`));
   next();
 });
 
 router.use('/courses/:year/:period', require('./courses'));
+
+router.use((err, req, res, next) => {
+  if (process.env.NODE_ENV && process.env.NODE_ENV.toUpperCase() === 'PRODUCTION') {
+    delete err.stack;
+  }
+  res.status(err.statusCode || 500).json(err);
+});
 
 module.exports = router;

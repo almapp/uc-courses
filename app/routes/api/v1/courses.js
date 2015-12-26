@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const throwjs = require('throw.js');
 const Promise = require('bluebird');
 
 const Course = mongoose.model('Course');
@@ -16,7 +17,7 @@ function getCourse(req, res, next) {
   };
   Course.findOne(query).lean().then(course => {
     req.course = course;
-    next();
+    course ? next() : next(new throwjs.notFound());
     return null;
   }).catch(next);
 }
@@ -30,6 +31,7 @@ router.route('/search')
     const search = [];
     if (query.name) search.push({ name: reg(query.name) })
     if (query.initials) search.push({ initials: reg(query.initials) })
+    if (query.section) search.push({ section: reg(query.section) })
     if (query.NRC) search.push({ NRC: reg(query.NRC) })
     if (query.school) search.push({ school: reg(query.school) })
     if (query.teacher) search.push({ teachers: { $elemMatch: { name: reg(query.teacher)} } });
@@ -49,7 +51,7 @@ router.route('/search')
     }
 
     Course.find({ $and: search }).limit(50).sort('initials').lean()
-      .then(results => res.send(results))
+      .then(sections => res.sendSections(sections))
       .catch(next);
   });
 
@@ -60,9 +62,9 @@ router.route('/:initials')
       year: req.year,
       period: req.period,
     };
-    Course.findInitial(query).lean().then(course => {
-      res.sendCourses(course)
-    }).catch(next);
+    Course.findInitial(query).lean()
+      .then(course => course ? res.sendCourses(course) : next(new throwjs.notFound()))
+      .catch(next);
   });
 
 router.route('/:initials/sections')
@@ -73,7 +75,7 @@ router.route('/:initials/sections')
       period: req.period,
     };
     Course.find(query).sort('section').lean()
-      .then(sections => res.sendSections(sections))
+      .then(sections => sections.length ? res.sendSections(sections) : next(new throwjs.notFound()))
       .catch(next);
   });
 
@@ -131,11 +133,14 @@ router.use(['/id/:_id', '/NRC/:nrc', '/:initials/sections/:section'], (req, res,
     query.initials = params.initials;
     query.section = params.section;
   }
-  // else  // TODO: bad query
+  if ((query.NRC && !Number(query.NRC)) || (query.section && !Number(query.section))) {
+    return next(new throwjs.notAcceptable('invalid identifier type, expected number'));
+  }
 
   Course.findOne(query).lean().then(section => {
     req.section = section;
-    next();
+    section ? next() : next(new throwjs.notFound());
+    return null;
   }).catch(next);
 });
 
