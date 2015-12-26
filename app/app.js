@@ -1,5 +1,6 @@
 // Node imports
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
@@ -12,6 +13,7 @@ const models = require('./models');
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 app.enable('trust proxy');
 app.set('json spaces', 4);
 
