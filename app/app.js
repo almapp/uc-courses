@@ -13,6 +13,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.enable('trust proxy');
+app.set('json spaces', 4);
 
 // Logs
 app.use(morgan('dev'));
