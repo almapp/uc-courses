@@ -19,7 +19,14 @@ app.use(morgan('dev'));
 
 // Index
 app.get("/", (req, res) => {
-    res.send({ status: 'on' });
+    res.send({
+      status: 'on',
+      versions: {
+        v1: {
+          url: `${req.protocol}://${req.headers.host}/api/v1`,
+        },
+      }
+    });
 });
 
 // REST API Routes
