@@ -61,6 +61,26 @@ router.route('/search')
       .catch(next);
   });
 
+router.route('/fullsearch')
+  .get((req, res, next) => {
+    const query = req.query;
+    const reg = (exp) => new RegExp(exp, 'i');
+
+    const search = [
+      { initials: reg(query.q) },
+      { name: reg(query.q) },
+    ];
+
+    const NRC = Number(query.q);
+    if (NRC) {
+      search.push({ NRC: NRC });
+    }
+
+    Course.find({ $or: search }).limit(50).sort('initials').lean()
+      .then(sections => res.sendSections(sections))
+      .catch(next);
+  });
+
 router.route('/:initials')
   .get((req, res, next) => {
     const query = {
