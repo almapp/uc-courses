@@ -23,7 +23,7 @@ router.route('/')
       period: req.query.period,
     } : null;
 
-    Course.find(query).select('teachers').then(courses => {
+    Course.find(query).select('teachers').lean().then(courses => {
       if (!courses.length) {
         return next(NOT_FOUND);
       }
