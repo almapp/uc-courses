@@ -13,9 +13,9 @@ const Course = mongoose.model('Course');
 const initials = scraper.initials;
 
 module.exports = function(options) {
-  Course.remove({})
+  return Course.remove({})
     .then(_ => {
-      return scraper.deepSearch(initials, options)
+      return scrap(initials, options)
     }).then(courses => {
       return Course.create(courses);
     }).then(created => {
