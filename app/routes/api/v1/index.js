@@ -19,6 +19,7 @@ router.use((req, res, next) => {
 });
 
 router.use('/courses', require('./courses'));
+router.use('/teachers', require('./teachers'));
 
 router.use((err, req, res, next) => {
   if (process.env.NODE_ENV && process.env.NODE_ENV.toUpperCase() === 'PRODUCTION') {
