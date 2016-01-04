@@ -6,7 +6,7 @@ const Course = mongoose.model('Course');
 
 const prepare = require('./helpers/hateoas');
 
-const router = express.Router({ caseSensitive: false, mergeParams: true });
+const router = express.Router({ caseSensitive: false });
 
 router.use((req, res, next) => {
   res.sendSections = function(obj) {
