@@ -197,15 +197,43 @@ const exclude = [
   'createdAt',
 ].map(e => `-${e}`).join(' ');
 
-CourseSchema.statics.findInitial = function(params) {
-  params = params instanceof String ? { initials: params } : params;
+CourseSchema.statics.findInitials = function(initials, options) {
   const query = {
-    initials: params.initials,
+    initials: {
+      $in: (initials instanceof Array) ? initials : [initials],
+    },
   }
-  if (params.year) query.year = params.year;
-  if (params.period) query.period = params.period;
+  options = options || {};
+  if (options.year) query.year = options.year;
+  if (options.period) query.period = options.period;
 
-  return this.model('Course').findOne(query).select(exclude);
+  // Newest first
+  return this.model('Course').find(query).select(exclude).sort('-year -period').lean()
+    .then(CourseSchema.statics.unique);
+}
+
+CourseSchema.statics.findInitial = function(query) {
+  /*
+  initials
+  year
+  period
+  */
+  return this.model('Course').findOne(query).select(exclude).lean();
+}
+
+CourseSchema.statics.unique = function(courses) {
+  const f = (c) => `${c.year}-${c.period}`;
+  const identifiers = {};
+  const uniques = [];
+
+  courses.forEach(course => {
+    const ID = f(course);
+    if (!identifiers[ID]) {
+      uniques.push(course);
+      identifiers[ID] = true;
+    }
+  });
+  return uniques;
 }
 
 const Course = mongoose.model('Course', CourseSchema);
