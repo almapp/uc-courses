@@ -26,6 +26,7 @@ if (config.get('scrap:secret')) {
     const options = {
       year: req.query.year || 2016,
       period: req.query.period || 1,
+      initials: req.query.initials, // null if not present
     };
     startScraping(options);
     res.send(`Scraping started on ${options.year}-${options.period}`);

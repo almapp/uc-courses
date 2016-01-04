@@ -9,9 +9,9 @@ const models = require('../../models');
 
 const Course = mongoose.model('Course');
 
-const initials = scraper.initials;
 
 module.exports = function(options) {
+  const initials = options.initials || scraper.initials;
   return Course.remove({})
     .then(() => {
       function handler(initial) {
