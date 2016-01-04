@@ -33,7 +33,6 @@ router.route('/')
       });
       const identifiers = {};
       const uniques = teachers.filter(teacher => {
-        console.log(teacher.name);
         if (identifiers[teacher.name]) {
           return false;
         } else {
