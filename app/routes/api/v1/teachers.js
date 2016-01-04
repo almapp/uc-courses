@@ -41,7 +41,21 @@ router.route('/')
         }
       });
       res.send(uniques);
-    });
+    }).catch(next);
+  });
+
+router.route('/:name')
+  .get((req, res, next) => {
+    const name = req.params.name;
+    const reversed = req.params.name.split(' ').reverse().join(' ');
+    const query = { 'teachers.name': { $in: [
+      name,
+      reversed,
+    ] } };
+
+    Course.findOne(query).select('teachers').lean().then(course => {
+      res.send(course.teachers.filter(t => t.name === name || t.name === reversed)[0]);
+    }).catch(next);
   });
 
 // Router is complete
