@@ -7,9 +7,10 @@ install:
   - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 
 env:
-  - FILE=docker-compose.travis.yml
-  - LOCAL_IMAGE=uccourses_web
-  - REGISTRY_IMAGE=almapp/uc-courses
+  - global:
+    - FILE=docker-compose.travis.yml
+    - LOCAL_IMAGE=uccourses_web
+    - REGISTRY_IMAGE=almapp/uc-courses
 
 before_script:
   - docker-compose --file=$FILE build
