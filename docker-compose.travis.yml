@@ -1,11 +1,11 @@
 web:
   build: .
   ports:
-    - "80:3000"
+    - "3000:3000"
   links:
     - mongo
   environment:
-    - NODE_ENV=production
+    - NODE_ENV=CI
     - SECRET_ENDPOINT
 
 mongo:

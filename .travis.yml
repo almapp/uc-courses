@@ -3,12 +3,21 @@ sudo: required
 services:
   - docker
 
+install:
+  - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
+
 env:
-  global:
-    - NODE_ENV=CI
+  - FILE=docker-compose.travis.yml
+  - LOCAL_IMAGE=uccourses_web
+  - REGISTRY_IMAGE=almapp/uc-courses
+
+before_script:
+  - docker-compose --file=$FILE build
 
 script:
-  - docker-compose build
-  - docker-compose run web npm test
-  - docker-compose stop
-  - docker-compose rm -f
+  - docker-compose --file=$FILE run web npm test
+  - docker-compose --file=$FILE stop
+  - docker-compose --file=$FILE rm -f
+
+after_success:
+  - ./deploy.sh
