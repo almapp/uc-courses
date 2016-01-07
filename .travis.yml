@@ -19,6 +19,3 @@ script:
   - docker-compose --file=$FILE run web npm test
   - docker-compose --file=$FILE stop
   - docker-compose --file=$FILE rm -f
-
-after_success:
-  - ./deploy.sh
