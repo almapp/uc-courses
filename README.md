@@ -59,21 +59,9 @@ cd uc-courses
 Set the environment variables:
 
 ```sh
-export NODE_ENV=production
-
 # Optional:
 # Perform a GET to this endpoint to manually start the scraping
 export SECRET_ENDPOINT=secret_route
-```
-
-Change the exposed endpoint on `docker-compose.yml` like this:
-
-```yml
-web:
-  build: .
-  ports:
-    - "80:3000"
-  # ...
 ```
 
 Start with:
