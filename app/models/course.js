@@ -203,12 +203,10 @@ CourseSchema.statics.findInitials = function(initials, options) {
       $in: (initials instanceof Array) ? initials : [initials],
     },
   }
-  options = options || {};
-  if (options.year) query.year = options.year;
-  if (options.period) query.period = options.period;
+  const filter = (options && options.year && options.period) ? options : {};
 
   // Newest first
-  return this.model('Course').find(query).select(exclude).sort('-year -period').lean()
+  return this.model('Course').find(query).where(filter).select(exclude).sort('-year -period').lean()
     .then(CourseSchema.statics.unique);
 }
 
