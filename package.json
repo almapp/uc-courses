@@ -7,7 +7,8 @@
     "start": "node index.js",
     "scrap": "node app/tasks/scrap",
     "develop": "node_modules/nodemon/bin/nodemon.js index.js",
-    "test": "mocha test"
+    "test": "mocha test",
+    "docs": " node_modules/apidoc/bin/apidoc --input app/routes/ --output docs"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,11 @@
     "url": "https://github.com/almapp/uc-courses/issues"
   },
   "homepage": "https://github.com/almapp/uc-courses#readme",
+  "apidoc": {
+    "title": "uc-courses",
+    "url": "/api/v1",
+    "sampleUrl": "http://uc-courses.lopezjuri.com/api/v1"
+  },
   "dependencies": {
     "bluebird": "^3.1.1",
     "buscacursos-uc": "^2.0.0",
@@ -39,6 +45,7 @@
     "throw.js": "^1.0.0"
   },
   "devDependencies": {
+    "apidoc": "git+https://github.com/afialho/apidoc.git",
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
     "nodemon": "^1.8.1",
