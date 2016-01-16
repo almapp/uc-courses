@@ -10,8 +10,7 @@ const prepare = require('./helpers/hateoas');
 const router = express.Router();
 
 // Utility
-const reg = (exp) => new RegExp(exp, 'i');
-const regs = (exps) => exps.map(reg);
+const isString = (string) => typeof string === 'string' || string instanceof String;
 const NOT_FOUND = new throwjs.notFound();
 
 // Process params
@@ -43,62 +42,6 @@ function getCourses(req, res, next) {
   }).catch(next);
 }
 
-// Strict query
-function searchQuery(query) {
-  const search = [];
-  if (query.name) search.push({ name: reg(query.name) });
-  if (query.initials) search.push({ initials: reg(query.initials) });
-  if (query.year) search.push({ year: query.year });
-  if (query.period) search.push({ period: query.period });
-  if (query.section) search.push({ section: reg(query.section) });
-  if (query.NRC) search.push({ NRC: reg(query.NRC) });
-  if (query.school) search.push({ school: reg(query.school) });
-  if (query.teacher) search.push({ teachers: { $elemMatch: { name: reg(query.teacher)} } });
-  if (query.campus) {
-    search.push({ $or: ['CAT','TALL','LAB','AYUD','PRAC','TERR','TES','OTRO'].map(type => {
-      const obj = {};
-      obj[`schedule.${type}.location.campus`] = reg(query.campus);
-      return obj;
-    })});
-  }
-  if (query.places) {
-    search.push({ $or: ['CAT','TALL','LAB','AYUD','PRAC','TERR','TES','OTRO'].map(type => {
-      const obj = {};
-      obj[`schedule.${type}.location.place`] = { $in: regs(query.places) };
-      return obj;
-    })});
-  }
-
-  if (search.length === 0) {
-    return null;
-  }
-  return { $and: search };
-}
-
-// Matching query
-function fullSearchQuery(query) {
-  const search = [
-    { initials: reg(query.q) },
-    { name: reg(query.q) },
-  ];
-
-  const NRC = Number(query.q);
-  if (NRC) {
-    search.push({ NRC: NRC });
-  }
-
-  if (query.year && query.period) {
-    search.push({
-      $and: [
-        { year: query.year },
-        { period: query.period },
-      ],
-    });
-  }
-
-  return { $or: search };
-}
-
 /**
  * @apiDefine NotFoundError
  *
@@ -126,19 +69,35 @@ router.route('/')
   .get((req, res, next) => {
     const query = req.query;
 
-    // Prepare search query
-    const search = (query.q) ? fullSearchQuery(query) : searchQuery(query);
     const limit = Math.min(Number(query.limit) || 50, 50);
-
-    // Do not allow empty search query
-    if (!search) {
-      return next(new throwjs.unprocessableEntity('empty search queries are not allowed'));
-    }
     if (limit < 0) {
       return next(new throwjs.unprocessableEntity('invalid limit query param'));
     }
 
-    Course.find(search).limit(limit).sort('initials').lean()
+    const valid = isString(query.name);
+    const search = (valid) ? {
+      $text : { $search : query.name/*, $language: 'es'*/ },
+    } : {};
+    const score = (valid) ? {
+      score : { $meta: 'textScore' }
+    } : {};
+
+    const where = {};
+    if (Number(query.year)) where.year = query.year;
+    if (Number(query.period)) where.period = query.period;
+    if (Number(query.section)) where.section = query.section;
+    if (Number(query.NRC)) where.NRC = query.NRC;
+    if (isString(query.initials)) where.initials = new RegExp(query.initials, 'i');
+    if (isString(query.school)) where.school = query.school;
+    if (isString(query.campus)) where['schedule.location.campus'] = query.campus;
+    if (query.places instanceof Array) where['schedule.location.place'] = { $in: query.places };
+    if (query.teachers instanceof Array) where['teachers.name'] = { $in: query.teachers };
+
+    if (!valid && !Object.keys(where).length) {
+      return next(new throwjs.unprocessableEntity('empty search queries are not allowed'));
+    }
+
+    Course.find(search, score).where(where).sort(score).limit(limit).lean()
       .then(sections => res.sendSections(sections))
       .catch(next);
   });

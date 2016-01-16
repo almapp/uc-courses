@@ -37,29 +37,24 @@ const RequirementsSchema = new Schema({
   _id: false,
 });
 
+const ModuleSchema = new Schema({
+  day: {
+    type: String,
+    required: true,
+    uppercase: true,
+  },
+  hours: {
+    type: [Number],
+  },
+}, {
+  _id: false,
+});
+
 const ScheduleSchema = new Schema({
-  modules: {
-    L: {
-      type: [Number],
-    },
-    M: {
-      type: [Number],
-    },
-    W: {
-      type: [Number],
-    },
-    J: {
-      type: [Number],
-    },
-    V: {
-      type: [Number],
-    },
-    S: {
-      type: [Number],
-    },
-    D: {
-      type: [Number],
-    },
+  identifier: {
+    type: String,
+    required: true,
+    uppercase: true,
   },
   location: {
     campus: {
@@ -69,6 +64,9 @@ const ScheduleSchema = new Schema({
       type: String,
     },
   },
+  modules: {
+    type: [ModuleSchema]
+  }
 }, {
   _id: false,
 });
@@ -142,30 +140,7 @@ const CourseSchema = new Schema({
     },
   },
   schedule: {
-    CAT: {
-      type: ScheduleSchema,
-    },
-    TALL: {
-      type: ScheduleSchema,
-    },
-    LAB: {
-      type: ScheduleSchema,
-    },
-    AYUD: {
-      type: ScheduleSchema,
-    },
-    PRAC: {
-      type: ScheduleSchema,
-    },
-    TERR: {
-      type: ScheduleSchema,
-    },
-    TES: {
-      type: ScheduleSchema,
-    },
-    OTRO: {
-      type: ScheduleSchema,
-    },
+    type: [ScheduleSchema],
   },
   requisites: {
     requirements: {
@@ -196,6 +171,8 @@ const exclude = [
   'updatedAt',
   'createdAt',
 ].map(e => `-${e}`).join(' ');
+
+CourseSchema.index({ name: 'text' });
 
 CourseSchema.statics.findInitials = function(initials, options) {
   const query = {
