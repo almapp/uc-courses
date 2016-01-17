@@ -21,6 +21,27 @@ router.use((req, res, next) => {
 router.use('/courses', require('./courses'));
 router.use('/teachers', require('./teachers'));
 
+router.route('/campuses')
+  .get((req, res, next) => {
+    Course.find().distinct("schedule.location.campus").then(campuses => {
+      res.send(campuses);
+    });
+  });
+
+router.route('/schools')
+  .get((req, res, next) => {
+    Course.find().distinct("school").then(campuses => {
+      res.send(campuses);
+    });
+  });
+
+router.route('/module_types')
+  .get((req, res, next) => {
+    Course.find().distinct("schedule.identifier").then(campuses => {
+      res.send(campuses);
+    });
+  });
+
 router.use((err, req, res, next) => {
   if (process.env.NODE_ENV && process.env.NODE_ENV.toUpperCase() === 'PRODUCTION') {
     delete err.stack;
