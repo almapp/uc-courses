@@ -44,8 +44,8 @@ npm test
 
 ### Prerequisites
 
-*   Docker
-*   Docker-Compose
+*   [Docker](https://docs.docker.com/)
+*   [Docker Compose](https://docs.docker.com/compose/)
 
 ### Setup
 
