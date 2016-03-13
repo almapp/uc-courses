@@ -168,6 +168,9 @@ const exclude = [
   'schedule',
   'vacancy',
   'teachers',
+  'specialApproval',
+  'english',
+  'droppable',
   'updatedAt',
   'createdAt',
 ].map(e => `-${e}`).join(' ');
