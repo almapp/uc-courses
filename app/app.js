@@ -12,7 +12,6 @@ const models = require('./models');
 const app = express();
 app.use(cors());
 app.enable('trust proxy');
-app.set('json spaces', 4);
 
 // Logs
 app.use(morgan('dev'));
