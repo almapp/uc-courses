@@ -11,8 +11,13 @@ const Course = mongoose.model('Course');
 
 // Handler per query
 function fetch(query) {
-  return buscacursos.fetch(query)
-    .then(courses => Course.create(courses));
+  return buscacursos.fetch(query).then(courses => {
+      console.log('Fetched:', query, courses.length);
+      return Course.create(courses);
+    }).catch(err => {
+      console.log('Error:', query, err);
+      return [];
+    });
 }
 
 function scrap(options) {
@@ -32,5 +37,6 @@ function scrap(options) {
 
 // Start operation
 scrap().then(result => {
-  return console.log('Scraping done! Batches:', result.length);
-}).then(() => process.exit())
+  console.log('Scraping done! Batches:', result.length);
+  process.exit();
+});
