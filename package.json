@@ -1,6 +1,6 @@
 {
   "name": "uc-courses",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "UC Courses API",
   "main": "index.js",
   "scripts": {
