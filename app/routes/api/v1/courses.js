@@ -93,10 +93,6 @@ router.route('/')
     if (query.places instanceof Array) where['schedule.location.place'] = { $in: query.places };
     if (query.teachers instanceof Array) where['teachers.name'] = { $in: query.teachers };
 
-    if (!valid && !Object.keys(where).length) {
-      return next(new throwjs.unprocessableEntity('empty search queries are not allowed'));
-    }
-
     Course.find(search, score).where(where).sort(score).limit(limit).lean()
       .then(sections => res.sendSections(sections))
       .catch(next);
