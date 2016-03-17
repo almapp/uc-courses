@@ -3,11 +3,17 @@
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const buscacursos = require('buscacursos-uc');
+const argv = require('yargs').argv;
 
 const database = require('./../../config/database');
 const models = require('../../models');
 
 const Course = mongoose.model('Course');
+
+const settings = {
+  concurrency: argv.concurrency || 5,
+};
+console.log('Settings:', settings);
 
 // Handler per query
 function fetch(query) {
@@ -32,7 +38,7 @@ function scrap(options) {
   }));
 
   return Course.remove({})
-    .then(() => Promise.map(queries, fetch, { concurrency: 5 }));
+    .then(() => Promise.map(queries, fetch, { concurrency: settings.concurrency }));
 }
 
 // Start operation

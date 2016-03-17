@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "scrap": "node app/tasks/scrap",
+    "scrap": "node app/tasks/scrap --concurrency=1",
     "develop": "node_modules/nodemon/bin/nodemon.js index.js",
-    "scrap": "node app/tasks/scrap",
     "test": "mocha test",
     "docs": " node_modules/apidoc/bin/apidoc --input app/routes/ --output docs"
   },
@@ -41,7 +40,8 @@
     "morgan": "^1.6.1",
     "nconf": "^0.8.2",
     "require-dir": "^0.3.0",
-    "throw.js": "^1.0.0"
+    "throw.js": "^1.0.0",
+    "yargs": "^4.3.1"
   },
   "devDependencies": {
     "apidoc": "git+https://github.com/afialho/apidoc.git",
