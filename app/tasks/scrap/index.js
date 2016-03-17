@@ -17,6 +17,7 @@ console.log('Settings:', settings);
 
 // Handler per query
 function fetch(query) {
+  console.log('Requesting:', query);
   return buscacursos.fetch(query).then(courses => {
       console.log('Fetched:', query, courses.length);
       return Course.create(courses);
